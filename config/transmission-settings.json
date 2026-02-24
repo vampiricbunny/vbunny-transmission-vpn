@@ -1,0 +1,14 @@
+
+{
+  "download-dir": "/data/completed",
+  "incomplete-dir": "/data/incomplete",
+  "incomplete-dir-enabled": true,
+  "watch-dir": "/data/watch",
+  "watch-dir-enabled": true,
+  "rpc-enabled": true,
+  "rpc-bind-address": "0.0.0.0",
+  "rpc-port": 9091,
+  "rpc-authentication-required": false,
+  "rpc-whitelist-enabled": false,
+  "peer-port-random-on-start": true
+}
