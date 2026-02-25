@@ -1,0 +1,1 @@
+put configs in here by making a new key and selecting "all"  or just the sserver you want then type in the name and it will choose the right thing.

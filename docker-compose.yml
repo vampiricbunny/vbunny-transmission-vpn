@@ -1,0 +1,32 @@
+services:
+  bunnypen:
+    build: .
+    container_name: bunnytorrent
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
+    env_file:
+      - .env
+    networks:
+      - vbunnynet
+    volumes:
+      - config_data:/config
+      - torrent_data:/data
+      - ./config/wireguard:/config/wireguard
+    ports:
+      - "9091:9091"
+      - "8082:8080"
+    restart: unless-stopped
+
+networks:
+  vbunnynet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.18.0.0/16
+
+volumes:
+  config_data:
+  torrent_data:
