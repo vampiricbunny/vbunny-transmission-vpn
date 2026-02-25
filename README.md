@@ -11,7 +11,8 @@ You do this once:
     Put it in your project:
     Code
 
-    config/wg0.conf
+    config/wireguard/*.conf
+go into mullvad make new wg key go to advance select "all" for all servers this will let you choose where to pick by city/country  
 
 this will choose what program to run.
 APP=transmission
