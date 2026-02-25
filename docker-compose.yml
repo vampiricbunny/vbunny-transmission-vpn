@@ -1,119 +1,37 @@
-version: "3.8"
-
 services:
-  torrentbox:
+  bunnypen:
     build: .
-    container_name: torrentbox
+    container_name: bunnytransmission
     cap_add:
       - NET_ADMIN
-      - SYS_MODULE
     devices:
       - /dev/net/tun
-    sysctls:
-      - net.ipv4.conf.all.src_valid_mark=1
-      - net.ipv6.conf.all.disable_ipv6=0
-      - net.ipv6.conf.default.disable_ipv6=0
+
     environment:
-      # Mullvad Configuration
-      - MULLVAD_ACCOUNT=${MULLVAD_ACCOUNT}
+      - USE_VPN=${USE_VPN:-true}
       - APP=${APP:-transmission}
-      - MULLVAD_COUNTRY=${MULLVAD_COUNTRY:-us}
+      - MULLVAD_COUNTRY=${MULLVAD_COUNTRY}
       - MULLVAD_CITY=${MULLVAD_CITY}
-      - MULLVAD_PORT=${MULLVAD_PORT:-51820}
-      - MULLVAD_MULTIHOP_ENTRY=${MULLVAD_MULTIHOP_ENTRY}
-      - MULLVAD_MULTIHOP_EXIT=${MULLVAD_MULTIHOP_EXIT}
-      - WG_KEY_RENEW_DAYS=${WG_KEY_RENEW_DAYS:-0}
-      
-      # Transmission Configuration
-      - TRANSMISSION_HOME=/config/transmission-home
-      - TRANSMISSION_RPC_PORT=9091
-      - TRANSMISSION_RPC_USERNAME=${TRANSMISSION_RPC_USERNAME:-admin}
-      - TRANSMISSION_RPC_PASSWORD=${TRANSMISSION_RPC_PASSWORD:-password}
-      - TRANSMISSION_DOWNLOAD_DIR=/data/completed
-      - TRANSMISSION_INCOMPLETE_DIR=/data/incomplete
-      - TRANSMISSION_WATCH_DIR=/data/watch
-      - TRANSMISSION_UMASK=2
-      
-      # Network Configuration
-      - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-      - OPENVPN_USERNAME=${OPENVPN_USERNAME}
-      - OPENVPN_PASSWORD=${OPENVPN_PASSWORD}
-      - OPENVPN_PROVIDER=MULLVAD
-      - OPENVPN_OPTS=${OPENVPN_OPTS}
-      - LOCAL_NETWORK=${LOCAL_NETWORK:-192.168.0.0/16,10.0.0.0/8,172.16.0.0/12}
-      - CREATE_TUN_DEVICE=false
-      - DROP_DEFAULT_ROUTE=false
-      - PEER_DNS=false
-      - PEER_DNS_PIN_ROUTES=false
-      
-      # Firewall Configuration
-      - ENABLE_UFW=false
-      - UFW_ALLOW_GW_NET=false
-      - UFW_EXTRA_PORTS=${UFW_EXTRA_PORTS}
-      - UFW_DISABLE_IPTABLES_REJECT=false
-      
-      # User/Group Configuration
+      - LOCAL_NETWORK=${LOCAL_NETWORK}
       - PUID=${PUID:-1000}
-      - PGID=${PGID:-1000}
-      
-      # Web Proxy Configuration
-      - WEBPROXY_ENABLED=false
-      - WEBPROXY_PORT=8118
-      - WEBPROXY_USERNAME=${WEBPROXY_USERNAME}
-      - WEBPROXY_PASSWORD=${WEBPROXY_PASSWORD}
-      
-      # Logging & Health
-      - LOG_TO_STDOUT=true
-      - HEALTH_CHECK_HOST=${HEALTH_CHECK_HOST:-google.com}
-      - SELFHEAL=false
-      
-      # Global Permissions
-      - GLOBAL_APPLY_PERMISSIONS=true
-      
-      # Timezone
-      - TZ=${TZ:-UTC}
-      
-      # Version/Revision
-      - REVISION=${REVISION:-07f5a2b9aea5028c95b75438c1552708e91dde71}
-    
+      - PGID=${PGID:-100}
+      - TZ=${TZ:-America/Los_Angeles}
+      - TRANSMISSION_RPC_USERNAME=${TRANSMISSION_RPC_USERNAME}
+      - TRANSMISSION_RPC_PASSWORD=${TRANSMISSION_RPC_PASSWORD}
+
     volumes:
-      # Configuration persistence
-      - /mnt/data/transmission/config:/config
-      
-      # Data persistence
-      - /mnt/data/transmission/data:/data
-      
-      # Optional: Mount custom configs
-      - ./config:/config-custom:ro
-    
+      - ./data:/data
+      - ./config:/config
+
     ports:
-      # Transmission Web UI
-      - "9091:9091"
-      # qBittorrent Web UI (if used)
-      - "8080:8080"
-      # Web Proxy (if enabled)
-      - "8118:8118"
-    
+      - "9091:9091" # Transmission WebUI
+      - "8080:8080" # qBittorrent WebUI
+
     restart: unless-stopped
-    
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-    
-    # Health check
+
     healthcheck:
-      test: ["CMD", "/usr/local/bin/healthcheck.sh"]
+      test: [ "CMD", "/usr/local/bin/healthcheck.sh" ]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 30s
-    
-    # Resource limits (optional - adjust as needed)
-    deploy:
-      resources:
-        limits:
-          memory:
-        reservations:
-          memory: 

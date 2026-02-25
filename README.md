@@ -1,40 +1,20 @@
-# vbunnytransmission/vpn – Mullvad WireGuard Torrent Box
+The workflow Mullvad expects
 
-All‑in‑one torrent container:
+You do this once:
 
-- WireGuard via Mullvad API
-- Kill‑switch (iptables)
-- Transmission or qBittorrent (APP env)
-- Optional key rotation (default: off)
+    Go to Mullvad → WireGuard → Generate key
 
-## Environment Variables
+    Pick a server
 
-- `MULLVAD_ACCOUNT` (required)
-- `APP` – `transmission` or `qbittorrent`
-- `MULLVAD_COUNTRY`
-- `MULLVAD_CITY`
-- `MULLVAD_PORT`
-- `MULLVAD_MULTIHOP_ENTRY`
-- `MULLVAD_MULTIHOP_EXIT`
-- `WG_KEY_RENEW_DAYS` – `0` = never rotate (default)
+    Download wg0.conf
 
-## Build
+    Put it in your project:
+    Code
 
-```bash
-docker build -t vbunnytransmission/vpn .
+    config/wg0.conf
 
-Run Example
-bash
-
-docker run -d \
-  --name torrentbox \
-  --cap-add=NET_ADMIN \
-  --device=/dev/net/tun \
-  -e MULLVAD_ACCOUNT=123456789012 \
-  -e APP=transmission \
-  -v $(pwd)/data:/data \
-  -v $(pwd)/config:/config:ro \
-  -p 9091:9091 \
-  vbunnytransmission/vpn
-
-Code
+this will choose what program to run.
+APP=transmission
+APP=Transmission
+APP=qbittorrent
+APP=QBITTORRENT

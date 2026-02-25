@@ -10,25 +10,31 @@ RUN apk add --no-cache \
     ca-certificates \
     transmission-daemon \
     qbittorrent-nox \
-    tzdata \
-    ip6tables
+    tzdata
 
-ENV MULLVAD_ACCOUNT="" \
-    MULLVAD_COUNTRY="us" \
-    MULLVAD_CITY="" \
-    MULLVAD_PORT="51820" \
-    MULLVAD_MULTIHOP_ENTRY="" \
-    MULLVAD_MULTIHOP_EXIT="" \
-    WG_KEY_RENEW_DAYS="0" \
+ENV USE_VPN="true" \
     APP="transmission" \
-    TZ="UTC"
+    MULLVAD_COUNTRY="" \
+    MULLVAD_CITY="" \
+    LOCAL_NETWORK="" \
+    PUID="1000" \
+    PGID="100" \
+    TZ="America/Los_Angeles" \
+    TRANSMISSION_HOME="/config/transmission-home" \
+    TRANSMISSION_RPC_PORT="9091" \
+    TRANSMISSION_RPC_USERNAME="" \
+    TRANSMISSION_RPC_PASSWORD="" \
+    TRANSMISSION_DOWNLOAD_DIR="/data/completed" \
+    TRANSMISSION_INCOMPLETE_DIR="/data/incomplete" \
+    TRANSMISSION_WATCH_DIR="/data/watch" \
+    TRANSMISSION_UMASK="2"
 
-COPY rootfs/*.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/*.sh
+# Copy scripts
+COPY rootfs/ /usr/local/bin/
+RUN chmod +x /usr/local/bin/*.sh || true
 
-HEALTHCHECK --interval=30s --timeout=10s --retries=3 --start-period=30s CMD /usr/local/bin/healthcheck.sh
+VOLUME ["/data", "/config", "/config/wireguard"]
 
-VOLUME ["/data"]
 
 EXPOSE 9091 8080
 
