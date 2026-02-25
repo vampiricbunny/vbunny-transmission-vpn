@@ -22,7 +22,7 @@ services:
     volumes:
       - ./data:/data
       - ./config:/config
-
+      - ./config/wireguard:/config/wireguard
     ports:
       - "9091:9091" # Transmission WebUI
       - "8080:8080" # qBittorrent WebUI

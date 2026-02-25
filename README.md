@@ -19,4 +19,3 @@ APP=transmission
 APP=Transmission
 APP=qbittorrent
 APP=QBITTORRENT
-
