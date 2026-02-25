@@ -19,3 +19,6 @@ APP=transmission
 APP=Transmission
 APP=qbittorrent
 APP=QBITTORRENT
+
+
+currently fixing do to the opnvpn not being supported
